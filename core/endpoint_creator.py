@@ -12,7 +12,7 @@ from fastcrud.types import (
 )
 
 
-class CoreEndpointCreator(EndpointCreator):
+class BaseEndpointCreator(EndpointCreator):
 
     def __init__(
         self,
@@ -98,3 +98,7 @@ class CoreEndpointCreator(EndpointCreator):
             tags=self.tags,
             # Other parameters as needed
         )
+
+
+class BaseAPIEndpointCreator(BaseEndpointCreator):
+    pass

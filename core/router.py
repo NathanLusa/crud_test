@@ -1,3 +1,4 @@
+
 from typing import Type, Optional, Union, Sequence, Callable
 from enum import Enum
 
@@ -10,10 +11,10 @@ from fastcrud.types import (
     UpdateSchemaType,
 )
 
-from core import CoreCRUD, CoreEndpointCreator
+from core import CoreCRUD, APIEndpointCreator
 
 
-def core_router(
+def api_router(
     session: Callable,
     model: ModelType,
     create_schema: Type[CreateSchemaType],
@@ -32,14 +33,14 @@ def core_router(
     db_delete_deps: Sequence[Callable] = [],
     included_methods: Optional[list[str]] = None,
     deleted_methods: Optional[list[str]] = None,
-    endpoint_creator: Optional[Type[CoreEndpointCreator]] = None,
+    endpoint_creator: Optional[Type[APIEndpointCreator]] = None,
     is_deleted_column: str = "is_deleted",
     deleted_at_column: str = "deleted_at",
     updated_at_column: str = "updated_at",
     endpoint_names: Optional[dict[str, str]] = None,
     filter_config: Optional[Union[FilterConfig, dict]] = None,
 ) -> APIRouter:
-    _endpoint_creator = endpoint_creator or CoreEndpointCreator
+    _endpoint_creator = endpoint_creator or APIEndpointCreator
 
     return crud_router(
         session=session,

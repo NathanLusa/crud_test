@@ -1,15 +1,15 @@
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
-from fastcrud import crud_router
+from fastcrud import crud_router, EndpointCreator, FastCRUD
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from crud_test.item.model import Base, Item
-from crud_test.item.schemas import CreateItemSchema, UpdateItemSchema
+from crud_test.item.schemas import ItemSchema
 
-from core import core_router, CoreCRUD
+from core import api_router, CoreCRUD
 
 # Database setup (Async SQLAlchemy)
 DATABASE_URL = "sqlite+aiosqlite:///./test.db"
@@ -35,11 +35,11 @@ item_crud = CoreCRUD(Item)
 
 # CRUD router setup
 # item_router = crud_router(
-item_router = core_router(
+item_router = api_router(
     session=get_session,
     model=Item,
-    create_schema=CreateItemSchema,
-    update_schema=UpdateItemSchema,
+    create_schema=ItemSchema,
+    update_schema=ItemSchema,
     crud=item_crud,
     path="/item",
     tags=["Items"],
