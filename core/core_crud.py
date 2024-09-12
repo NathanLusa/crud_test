@@ -21,7 +21,7 @@ class CoreCRUD(FastCRUD):
             updated_at_column,
         )
 
-class APICRUD(CoreCRUD):
+class ApiCRUD(CoreCRUD):
     def __init__(
         self,
         model: type[ModelType],

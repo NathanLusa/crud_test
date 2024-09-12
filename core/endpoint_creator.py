@@ -1,6 +1,7 @@
-from typing import Type, Optional, Callable, Sequence, Union
+from typing import Type, Optional, Callable, Sequence, Union, List
 from enum import Enum
 
+from fastapi import Depends
 from fastcrud import EndpointCreator
 from fastcrud.crud.fast_crud import FastCRUD
 from fastcrud import FilterConfig
@@ -10,6 +11,9 @@ from fastcrud.types import (
     ModelType,
     UpdateSchemaType,
 )
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from .schemas import BaseLookupSchema
 
 
 class BaseEndpointCreator(EndpointCreator):
@@ -101,4 +105,51 @@ class BaseEndpointCreator(EndpointCreator):
 
 
 class BaseAPIEndpointCreator(BaseEndpointCreator):
-    pass
+
+    def add_routes_to_router(
+        self,
+        create_deps: Sequence[Callable] = [],
+        read_deps: Sequence[Callable] = [],
+        read_multi_deps: Sequence[Callable] = [],
+        read_paginated_deps: Sequence[Callable] = [],
+        update_deps: Sequence[Callable] = [],
+        delete_deps: Sequence[Callable] = [],
+        db_delete_deps: Sequence[Callable] = [],
+        included_methods: Optional[Sequence[str]] = None,
+        deleted_methods: Optional[Sequence[str]] = None,
+    ):
+        super().add_routes_to_router(
+            create_deps,
+            read_deps,
+            read_multi_deps,
+            read_paginated_deps,
+            update_deps,
+            delete_deps,
+            db_delete_deps,
+            included_methods,
+            deleted_methods,
+        )
+
+
+        if self.crud and self.crud.lookup_solver:
+            self.router.add_api_route(
+                path='/lookup/',
+                endpoint=self._lookup(),
+                methods=['GET'],
+                response_model=List[BaseLookupSchema],  # type: ignore
+                # summary='Lookup',
+                # dependencies=True,
+                # error_responses=[NOT_FOUND],
+            )
+
+    def _lookup(self):
+        # async def _lookup(db: AsyncSession, find: str = '', **kwargs: Any) -> List[BaseLookupSchema]:
+        async def route(
+            db: AsyncSession = Depends(self.session),
+            find: str = ''
+            # db: Session = Depends(self.db_func),
+        ) -> List[BaseLookupSchema]:
+            return self.crud._lookup(db, find)
+
+
+        return route

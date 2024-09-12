@@ -1,4 +1,4 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, List, Any
 
 from fastapi import FastAPI
 from fastcrud import crud_router, EndpointCreator, FastCRUD
@@ -9,7 +9,9 @@ from sqlalchemy.orm import sessionmaker
 from crud_test.item.model import Base, Item
 from crud_test.item.schemas import ItemSchema
 
-from core import api_router, CoreCRUD
+from core import api_router, CoreCRUD, ApiCRUD
+from core.schemas import BaseLookupSchema
+
 
 # Database setup (Async SQLAlchemy)
 DATABASE_URL = "sqlite+aiosqlite:///./test.db"
@@ -30,8 +32,20 @@ async def lifespan(app: FastAPI):
 # FastAPI app
 app = FastAPI(lifespan=lifespan)
 
+
+def lookup_solver(db_models: List[Item]) -> List[BaseLookupSchema]:
+    return [BaseLookupSchema(value=x.id, desc=x.name) for x in db_models]
+
+def lookup_filter(query, find):
+    return query.filter(Item.name.ilike(f'%{find}%'))
+
+
 # CRUD operations setup
-item_crud = CoreCRUD(Item)
+item_crud = ApiCRUD(
+    Item,
+    lookup_filter=lookup_filter,
+    lookup_solver=lookup_solver,
+)
 
 # CRUD router setup
 # item_router = crud_router(
