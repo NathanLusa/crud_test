@@ -1,4 +1,4 @@
-from typing import Type, Optional, Callable, Sequence, Union, List
+from typing import Type, Optional, Callable, Sequence, Union, List, Any
 from enum import Enum
 
 from fastapi import Depends
@@ -136,7 +136,7 @@ class BaseAPIEndpointCreator(BaseEndpointCreator):
                 path='/lookup/',
                 endpoint=self._lookup(),
                 methods=['GET'],
-                response_model=List[BaseLookupSchema],  # type: ignore
+                # response_model=List[BaseLookupSchema],  # type: ignore
                 # summary='Lookup',
                 # dependencies=True,
                 # error_responses=[NOT_FOUND],
@@ -148,8 +148,8 @@ class BaseAPIEndpointCreator(BaseEndpointCreator):
             db: AsyncSession = Depends(self.session),
             find: str = ''
             # db: Session = Depends(self.db_func),
-        ) -> List[BaseLookupSchema]:
-            return self.crud._lookup(db, find)
+        ) -> Any: #List[BaseLookupSchema]:
+            return await self.crud._lookup(db, find)
 
 
         return route

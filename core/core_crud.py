@@ -43,15 +43,24 @@ class ApiCRUD(CoreCRUD):
         self.lookup_solver = lookup_solver
 
 
-    async def _lookup(self, db: AsyncSession, find: str = '', **kwargs: Any) -> List[BaseLookupSchema]:
-        query = db.query(self.db_model)
+    async def _lookup(self, db: AsyncSession, find: str = '', **kwargs: Any) -> Any: #List[BaseLookupSchema]:
+        # query = db.query(self.db_model)
+        # stmt = await self.select(
+        #     schema_to_select=self.model,
+        #     # sort_columns=sort_columns,
+        #     # sort_orders=sort_orders,
+        #     **kwargs,
+        # )
+        query = await self.get_multi(db)
 
-        if self.lookup_filter: 
-            query = self.lookup_filter(query, find)
+        # if self.lookup_filter: 
+        #     query = self.lookup_filter(query, find)
 
         # query.order_by(getattr(self.db_model, self._pk))
         # query.limit(limit)
         # query.offset(skip)
 
-        return self.lookup_solver(query.all())
+        # query = self.lookup_solver(query.all())
+        # query = await db.execute(stmt)
+        return query
     
