@@ -46,7 +46,7 @@ class ApiCRUD(CoreCRUD):
     async def _lookup(self, db: AsyncSession, find: str = '', **kwargs: Any) -> List[BaseLookupSchema]:
         _filter = {}
         if self.lookup_filter: 
-            _filter = self.lookup_filter(None, find)
+            _filter = self.lookup_filter(find)
 
         query = await self.get_multi(db, **_filter)
 

@@ -36,10 +36,8 @@ app = FastAPI(lifespan=lifespan)
 def lookup_solver(db_models: List[Item]) -> List[BaseLookupSchema]:
     return [BaseLookupSchema(value=x['id'], desc=x['name']) for x in db_models['data']]
 
-def lookup_filter(query, find):
+def lookup_filter(find):
     return {'name__ilike':f'%{find}%'}
-    return [Item.name.ilike(f'%{find}%')]
-    return query.filter(Item.name.ilike(f'%{find}%'))
 
 
 # CRUD operations setup
@@ -57,8 +55,8 @@ item_router = api_router(
     create_schema=ItemSchema,
     update_schema=ItemSchema,
     crud=item_crud,
-    path="/item",
-    tags=["Items"],
+    path="/conta",
+    tags=["Conta"],
 )
 
 app.include_router(item_router, prefix='/api')

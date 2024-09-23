@@ -95,13 +95,13 @@ class BaseEndpointCreator(EndpointCreator):
         )
 
         # Now, add custom routes
-        self.router.add_api_route(
-            path="/custom",
-            endpoint=self._custom_route(),
-            methods=["GET"],
-            tags=self.tags,
-            # Other parameters as needed
-        )
+        # self.router.add_api_route(
+        #     path="/custom",
+        #     endpoint=self._custom_route(),
+        #     methods=["GET"],
+        #     tags=self.tags,
+        #     # Other parameters as needed
+        # )
 
 
 class BaseAPIEndpointCreator(BaseEndpointCreator):
@@ -132,11 +132,13 @@ class BaseAPIEndpointCreator(BaseEndpointCreator):
 
 
         if self.crud and self.crud.lookup_solver:
-            self.router.add_api_route(
+            self.add_custom_route(
+            # self.router.add_api_route(
                 path='/lookup/',
                 endpoint=self._lookup(),
                 methods=['GET'],
-                response_model=List[BaseLookupSchema],  # type: ignore
+                # response_model=List[BaseLookupSchema],  # type: ignore
+                tags=self.tags,
                 # summary='Lookup',
                 # dependencies=True,
                 # error_responses=[NOT_FOUND],
