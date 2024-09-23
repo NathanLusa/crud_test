@@ -136,7 +136,7 @@ class BaseAPIEndpointCreator(BaseEndpointCreator):
                 path='/lookup/',
                 endpoint=self._lookup(),
                 methods=['GET'],
-                # response_model=List[BaseLookupSchema],  # type: ignore
+                response_model=List[BaseLookupSchema],  # type: ignore
                 # summary='Lookup',
                 # dependencies=True,
                 # error_responses=[NOT_FOUND],
@@ -148,7 +148,7 @@ class BaseAPIEndpointCreator(BaseEndpointCreator):
             db: AsyncSession = Depends(self.session),
             find: str = ''
             # db: Session = Depends(self.db_func),
-        ) -> Any: #List[BaseLookupSchema]:
+        ) -> List[BaseLookupSchema]:
             return await self.crud._lookup(db, find)
 
 

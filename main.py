@@ -34,9 +34,11 @@ app = FastAPI(lifespan=lifespan)
 
 
 def lookup_solver(db_models: List[Item]) -> List[BaseLookupSchema]:
-    return [BaseLookupSchema(value=x.id, desc=x.name) for x in db_models]
+    return [BaseLookupSchema(value=x['id'], desc=x['name']) for x in db_models['data']]
 
 def lookup_filter(query, find):
+    return {'name__ilike':f'%{find}%'}
+    return [Item.name.ilike(f'%{find}%')]
     return query.filter(Item.name.ilike(f'%{find}%'))
 
 
