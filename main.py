@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from crud_test.item.model import Base, Item
 from crud_test.item.schemas import ItemSchema
 
-from core import api_router, CoreCRUD, ApiCRUD
+from core import api_router, CoreCRUD, ApiCRUD, FormCRUD
 from core.schemas import BaseLookupSchema
 
 
@@ -59,4 +59,23 @@ item_router = api_router(
     tags=["Conta"],
 )
 
+
+item_form_crud = FormCRUD(
+    Item,
+    lookup_filter=lookup_filter,
+    lookup_solver=lookup_solver,
+)
+
+item_form_router = api_router(
+    session=get_session,
+    model=Item,
+    create_schema=ItemSchema,
+    update_schema=ItemSchema,
+    crud=item_form_crud,
+    path="/conta",
+    tags=["Conta"],
+)
+
+
 app.include_router(item_router, prefix='/api')
+app.include_router(item_form_router, prefix='/form')

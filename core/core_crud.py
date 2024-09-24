@@ -5,6 +5,7 @@ from fastcrud.types import ModelType
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.schemas import BaseLookupSchema
+from core.types import TemplateSchemaDict
 
 class CoreCRUD(FastCRUD):
     def __init__(
@@ -20,6 +21,7 @@ class CoreCRUD(FastCRUD):
             deleted_at_column,
             updated_at_column,
         )
+
 
 class ApiCRUD(CoreCRUD):
     def __init__(
@@ -51,4 +53,29 @@ class ApiCRUD(CoreCRUD):
         query = await self.get_multi(db, **_filter)
 
         return self.lookup_solver(query)
-    
+
+
+class FormCRUD(CoreCRUD):
+    def __init__(
+        self,
+        model: type[ModelType],
+        is_deleted_column: str = "is_deleted",
+        deleted_at_column: str = "deleted_at",
+        updated_at_column: str = "updated_at",
+
+        form: Optional[TemplateSchemaDict] = None,
+        lista: Optional[TemplateSchemaDict] = None,
+    ) -> None:
+        super().__init__(
+            model,
+            is_deleted_column,
+            deleted_at_column,
+            updated_at_column,
+        )
+
+        self.form = form
+        self.lista = lista
+
+
+class FormAPICRUD(ApiCRUD, FormCRUD):
+    pass
