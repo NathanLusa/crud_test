@@ -1,0 +1,10 @@
+<div class="mb-3">
+    <label for="select-{{ props.name }}" class="form-label">{{ props.title }}</label>
+    <select class="form-control form-select-sm" id="select-{{ props.name }}" name="{{ props.name }}"
+        value="{{ props.value }}" aria-label="Default select example" {{ macros.required(props.required) }}>
+        {% for option in props.options %}
+        <option value="{{ option.value }}" {{'selected' if props.value==option.value else '' }}>{{ option.label }}
+        </option>
+        {% endfor %}
+    </select>
+</div>

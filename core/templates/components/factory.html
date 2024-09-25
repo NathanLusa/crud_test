@@ -1,0 +1,30 @@
+{% if component.type != '' %}
+{% include "components/" + component.type + ".html" %}
+{% endif %}
+{#
+{% if component.type == 'Input' %}
+{% include "components/Input.html" %}
+
+{% elif component.type == 'Switch' %}
+{% include "components/Switch.html" %}
+
+{% elif component.type == 'Select' %}
+{% include "components/Select.html" %}
+
+{% elif component.type == 'Lookup' %}
+{% include "components/Lookup.html" %}
+
+{% elif component.type == 'Div' %}
+{% include "components/Div.html" %}
+
+{% elif component.type == 'Form' %}
+{% include "components/Form.html" %}
+
+{% elif component.type == 'Button' %}
+{% include "components/Button.html" %}
+
+{% else %}
+{% include "components/{{ component.type }}.html" %}
+
+{% endif %}
+#}

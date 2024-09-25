@@ -1,0 +1,6 @@
+<div {{ macros.add_class_name(props.class_name, 'mb-3' ) }}>
+    <label for="input-{{props.name}}" class="form-label">{{ props.title }}</label>
+    <input class="form-control form-control-sm" id="input-{{props.name}}" type="{{ props.html_type }}"
+        name="{{ props.name }}" value="{{ props.value|e }}" size="{{ props.size }}" {{ macros.required(props.required)
+        }}>
+</div>

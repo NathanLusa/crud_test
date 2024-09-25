@@ -1,0 +1,31 @@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#{{props.name}}_modal">
+    {{props.button_title}}
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="{{props.name}}_modal" tabindex="-1" aria-labelledby="{{props.name}}_modalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="{{props.name}}_modalLabel">{{props.title}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" data-url-body="{{props.form_url_body}}">
+                {% with component_list = props.components %}
+
+                {% include "includes/add_components.html" %}
+
+                {% endwith %}
+
+            </div>
+            {% if props.show_footer %}
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

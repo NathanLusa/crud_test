@@ -1,0 +1,5 @@
+<div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" role="switch" id="switch-{{ props.name }}" name="{{ props.name }}"
+        {{'checked' if props.value=='True' else '' }}>
+    <label class="form-check-label" for="switch-{{ props.name }}">{{ props.title }}</label>
+</div>

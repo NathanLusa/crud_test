@@ -1,0 +1,9 @@
+<div class="form-group mb-3">
+
+    <label for="lookup-{{ props.name }}" class="form-label">{{ props.title }}</label>
+    <input id="lookup-{{ props.name }}" name="{{ props.name }}" type="text" class="form-control form-control-sm"
+        placeholder="Search" value="{{ props.value }}" aria-expanded="false" {{ macros.add_data_list(props.data_list) }}
+        {{ macros.required(props.required) }}>
+
+    <ul class="list-group lookup-dropdown" id="lookup-{{ props.name }}-list" style="display: none;"></ul>
+</div>

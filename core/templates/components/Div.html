@@ -1,0 +1,9 @@
+<div {{ macros.add_class_name(props.class_name, 'mb-3' ) }}>
+
+    {% with component_list = props.components %}
+
+    {% include "includes/add_components.html" %}
+
+    {% endwith %}
+
+</div>

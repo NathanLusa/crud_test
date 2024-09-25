@@ -1,0 +1,42 @@
+{% import "macros/macros.html" as macros %}
+
+{% if not is_ajax %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+
+{% if schema %}
+
+{% if schema.properties.title %}
+<h1 class="text-4xl">{{ schema.properties.title.default }}</h1>
+{% else %}
+<h1 class="text-4xl">{{ schema.title.capitalize() }}</h1>
+{% endif %}
+
+<div class="flex flex-col">
+    {% for item in schema.properties %}
+    <div>
+        {% set component=get_type(item, schema) %}
+
+        {% if component %}
+
+        {% with item = item, props = component.properties, title = component.properties.title %}
+
+        {% include "components/factory.html" %}
+
+        {% endwith %}
+
+        {% endif %}
+
+    </div>
+    {% endfor %}
+
+</div>
+{% endif %}
+
+{% block script %}
+
+{% endblock script %}
+
+{% endblock content %}

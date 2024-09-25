@@ -175,6 +175,17 @@ class BaseFormEndpointCreator(BaseEndpointCreator):
         included_methods: Optional[Sequence[str]] = None,
         deleted_methods: Optional[Sequence[str]] = None,
     ):
+        self._deleted_methods = deleted_methods or []
+        self._deleted_methods.extend([
+            'create',
+            'read',
+            'read_multi',
+            'read_paginated',
+            'update',
+            'delete',
+            'db_delete',
+        ])
+
         super().add_routes_to_router(
             create_deps,
             read_deps,
@@ -184,11 +195,11 @@ class BaseFormEndpointCreator(BaseEndpointCreator):
             delete_deps,
             db_delete_deps,
             included_methods,
-            deleted_methods,
+            self._deleted_methods,
         )
 
 
-        if self.crud and self.crud.lookup_solver:
+        if self.crud and self.crud.form:
             self.add_custom_route(
                 path='/',
                 endpoint=self._form(),
@@ -216,14 +227,14 @@ class BaseFormEndpointCreator(BaseEndpointCreator):
             ajax: bool = False,
             default: dict = Depends(utils.parse_list)
         ):
-            _schema = _j.generate_json_schema(self.form['schema'])
-            _schema = utils.preencher_schema_model(None, _schema, self.get_schema_value, self.get_schema_data_list, self.get_schema_component)
+            _schema = _j.generate_json_schema(self.crud.form['schema'])
+            _schema = utils.preencher_schema_model(None, _schema, self.crud.get_schema_value, self.crud.get_schema_data_list, self.crud.get_schema_component)
             _schema = utils.preencher_schema_default(default, _schema)
             
             context = {'request': request, 'schema': _schema, 'is_ajax': ajax}
             context.update(request.state.custom_context)
 
-            return templates.TemplateResponse(self.form['template'], context)
+            return templates.TemplateResponse(self.crud.form['template'], context)
         
         return route
     

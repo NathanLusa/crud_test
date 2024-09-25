@@ -1,0 +1,5 @@
+{% if props.html_type == '' %}
+{{props.text}}
+{% else %}
+<{{props.html_type}} {{macros.add_class_name(props.class_name)}}>{{props.text}}</{{props.html_type}}>
+{% endif %}

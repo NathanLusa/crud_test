@@ -1,0 +1,10 @@
+<form {% if props.action %} action="{{ props.action }}" {% endif %} {% if props.method %} method="{{ props.method }}" {%
+    endif %} {{ macros.add_class_name(props.class_name, "mb-3" ) }} data-post-type="{{ props.post_type }}">
+
+    {% with component_list = props.components %}
+
+    {% include "includes/add_components.html" %}
+
+    {% endwith %}
+
+</form>

@@ -1,0 +1,29 @@
+{# <h4>{{props.title}}</h4> #}
+<div class="d-inline-flex align-items-center">
+    {% with component_list = props.title %}
+
+    {% include "includes/add_components.html" %}
+
+    {% endwith %}
+</div>
+<table class="table table-striped mb-4" {{ macros.add_data_list(props.data_list) }}>
+    <thead>
+        <tr>
+            {% for column in props.columns %}
+            <th scope="col" {{ macros.add_data_list(column.data_list) }} {{ macros.add_action_list(column.action_list)
+                }}>{{ column.name }}
+            </th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {# {% for column in props.columns %}
+        <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+        </tr>
+        {% endfor %} #}
+    </tbody>
+</table>

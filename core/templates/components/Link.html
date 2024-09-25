@@ -1,0 +1,9 @@
+<a href="{{ props.href }}" {{ macros.add_class_name(props.class_name) }} {{ macros.add_data_list(props.data_list) }}>
+
+    {% with component_list = props.components %}
+
+    {% include "includes/add_components.html" %}
+
+    {% endwith %}
+
+</a>

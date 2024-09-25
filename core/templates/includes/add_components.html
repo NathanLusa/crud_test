@@ -1,0 +1,15 @@
+{% for item in component_list %}
+
+{% set component=get_type('', item) %}
+
+{% if component %}
+
+{% with props = component.properties %}
+
+{% include "components/factory.html" %}
+
+{% endwith %}
+
+{% endif %}
+
+{% endfor %}

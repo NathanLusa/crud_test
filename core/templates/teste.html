@@ -1,0 +1,48 @@
+{% if not is_ajax %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<form id="meuForm" action="/sua-url-aqui" method="POST">
+    <input type="text" name="campo1" placeholder="Campo 1">
+    <input type="text" name="campo2" placeholder="Campo 2">
+    <button type="submit">Enviar</button>
+</form>
+{% endblock content %}
+
+{% block bodyscript %}
+<script>
+    $(document).ready(function () {
+        // Captura o evento de submissão do formulário
+        $('#meuForm').on('submit', function (event) {
+            event.preventDefault();  // Evita a submissão padrão
+
+            // Coleta os dados do formulário
+            var formData = $(this).serializeArray();
+            var data = {};
+
+            // Converte os dados do formulário para um objeto JSON
+            $.each(formData, function (index, item) {
+                data[item.name] = item.value;
+            });
+
+            console.log(formData);
+            console.log(data);
+
+            // Envia os dados JSON via AJAX
+            $.ajax({
+                url: $(this).attr('action'),  // URL do formulário
+                method: 'POST',  // Método POST
+                contentType: 'application/json',  // Define o tipo de conteúdo como JSON
+                data: JSON.stringify(data),  // Converte o objeto JSON em string
+                success: function (response) {
+                    console.log('Sucesso:', response);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('Erro:', textStatus, errorThrown);
+                }
+            });
+        });
+    });
+</script>
+{% endblock bodyscript %}

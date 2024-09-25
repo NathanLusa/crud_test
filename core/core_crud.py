@@ -65,6 +65,10 @@ class FormCRUD(CoreCRUD):
 
         form: Optional[TemplateSchemaDict] = None,
         lista: Optional[TemplateSchemaDict] = None,
+
+        get_schema_component: Optional[Callable] = None,
+        get_schema_data_list: Optional[Callable] = None,
+        get_schema_value: Optional[Callable] = None,
     ) -> None:
         super().__init__(
             model,
@@ -75,6 +79,11 @@ class FormCRUD(CoreCRUD):
 
         self.form = form
         self.lista = lista
+
+        self.get_schema_component = get_schema_component
+        self.get_schema_data_list = get_schema_data_list
+        self.get_schema_value = get_schema_value
+
 
 
 class FormAPICRUD(ApiCRUD, FormCRUD):

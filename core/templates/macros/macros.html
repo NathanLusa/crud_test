@@ -1,0 +1,19 @@
+{% macro add_data_list(data_list) %}
+{% if data_list %}
+{% for data in data_list %} data-{{ data.name }}="{{ data.value }}" {% endfor %}
+{% endif %}
+{% endmacro %}
+
+{% macro add_action_list(action_list) %}
+{% if action_list %}
+data-actions="{% for action in action_list %}{{action}};{% endfor %}"
+{% endif %}
+{% endmacro %}
+
+{% macro add_class_name(class_name, default) %}
+{% if class_name %} class="{{default}} {{class_name}}" {% else %} class="{{default}}" {% endif %}
+{% endmacro %}
+
+{% macro required(is_required) %}
+{{'required' if is_required else ''}}
+{% endmacro %}

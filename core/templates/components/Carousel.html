@@ -1,0 +1,31 @@
+<div {{macros.add_class_name(props.class_name, "col-4 my-5" )}}>
+    <h2>{{props.title}}</h2>
+
+    <div id="carousel-{{props.name}}" class="carousel slide" data-bs-ride="false">
+
+        <div class="carousel-indicators">
+            {% for image in carousel_images(props.data_list) %}
+            <button type="button" data-bs-target="#carousel-{{props.name}}" data-bs-slide-to="{{loop.index0}}"
+                class="{{'active' if loop.index0 == 0 else ''}}"></button>
+            {% endfor %}
+        </div>
+
+        <div class="carousel-inner">
+            {% for image in carousel_images(props.data_list) %}
+            <div class="carousel-item {{'active' if loop.index0 == 0 else ''}}">
+                <img class="d-block w-100 lazy" src="{{image}}">
+            </div>
+            {% endfor %}
+        </div>
+        <a class="carousel-control-prev" href="#carousel-{{props.name}}" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </a>
+        <a class="carousel-control-next" href="#carousel-{{props.name}}" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Próximo</span>
+        </a>
+    </div>
+
+
+</div>

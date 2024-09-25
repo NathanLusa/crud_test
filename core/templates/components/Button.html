@@ -1,0 +1,3 @@
+<button name="{{ props.name }}" {% if props.html_type %} type="{{ props.html_type }}" {% endif %} {% if props.class_name
+    %} class="btn {{ props.class_name }}" {% else %} class="btn btn-primary btn-sm" {% endif %}>{{
+    props.label }}</button>
