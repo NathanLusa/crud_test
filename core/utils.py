@@ -15,13 +15,13 @@ def preencher_schema_model(model, schema_json, get_schema_value, get_schema_data
                         component['value'] += (' - ' + relation.name)
 
             if get_schema_value and ('value' in component):
-                component['value'] = get_schema_value(component['name'], component['value'], model.id if model else 0)
+                component['value'] = get_schema_value(component['name'], component['value'], model['id'] if model else 0)
 
             if get_schema_data_list and ('data_list' in component):
-                component['data_list'] = get_schema_data_list(component['name'], component['data_list'], model.id if model else 0)
+                component['data_list'] = get_schema_data_list(component['name'], component['data_list'], model['id'] if model else 0)
 
         if get_schema_component:
-            component = get_schema_component(component, model.id if model else 0)
+            component = get_schema_component(component, model['id'] if model else 0)
 
         if 'components' in component:
             for sub_component in component['components']:
@@ -43,7 +43,7 @@ def preencher_schema_model(model, schema_json, get_schema_value, get_schema_data
                     traverse_and_fill(value, model)
 
             if get_schema_component:
-                schema = get_schema_component(schema, model.id if model else 0)
+                schema = get_schema_component(schema, model['id'] if model else 0)
         elif isinstance(schema, list):
             for item in schema:
                 traverse_and_fill(item, model)

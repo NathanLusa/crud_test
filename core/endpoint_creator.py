@@ -210,15 +210,28 @@ class BaseFormEndpointCreator(BaseEndpointCreator):
                 # dependencies=True,
                 # error_responses=[NOT_FOUND],
             )
+            self.add_custom_route(
+                path='/{id:int}',
+                endpoint=self._form_edit(),
+                methods=['GET'],
+                # response_model=Any,  # type: ignore
+                tags=self.tags,
+                # summary='Form edit',
+                # dependencies=True,
+                # error_responses=[NOT_FOUND],
+            )
 
-    # def _lookup(self):
-    #     async def route(
-    #         db: AsyncSession = Depends(self.session),
-    #         find: str = ''
-    #     ) -> List[BaseLookupSchema]:
-    #         return await self.crud._lookup(db, find)
-
-    #     return route
+        if self.crud and self.crud.lista:
+            self.add_custom_route(
+                path='/lista',
+                endpoint=self._form_lista(),
+                methods=['GET'],
+                # response_model=Any,  # type: ignore
+                tags=self.tags,
+                # summary='Form lista',
+                # dependencies=True,
+                # error_responses=[NOT_FOUND],
+            )
 
 
     def _form(self):
@@ -238,46 +251,48 @@ class BaseFormEndpointCreator(BaseEndpointCreator):
         
         return route
     
-    # def _form_edit(self, *args: Any, **kwargs: Any) -> CALLABLE:
-    #     async def route(
-    #         request: Request,
-    #         item_id: self._pk_type,  # type: ignore
-    #         db: Session = Depends(self.db_func),
-    #         ajax: bool = False,
-    #         default: dict = Depends(utils.parse_list)
-    #     ):
-    #         model: Model = db.query(self.db_model).get(item_id)
+    def _form_edit(self):
+        async def route(
+            request: Request,
+            # id: self._pk_type,  # type: ignore
+            id: int,
+            db: AsyncSession = Depends(self.session),
+            ajax: bool = False,
+            default: dict = Depends(utils.parse_list)
+        ):
+            # model: Model = db.query(self.db_model).get(item_id)
+            model = await self.crud.get(db, id=id)
 
-    #         if model:
-    #             _schema = self.form['schema']
-    #             _schema = _j.generate_json_schema(_schema)
-    #             _schema = utils.preencher_schema_model(model, _schema, self.get_schema_value, self.get_schema_data_list, self.get_schema_component)
-    #             _schema = utils.set_form_action_id(_schema, item_id, 'PUT')
-    #             _schema = utils.preencher_schema_default(default, _schema)
+            if model:
+                _schema = self.crud.form['schema']
+                _schema = _j.generate_json_schema(_schema)
+                _schema = utils.preencher_schema_model(model, _schema, self.crud.get_schema_value, self.crud.get_schema_data_list, self.crud.get_schema_component)
+                _schema = utils.set_form_action_id(_schema, id, 'PATCH')
+                _schema = utils.preencher_schema_default(default, _schema)
 
-    #             context = {'request': request, 'schema': _schema, 'is_ajax': ajax}
-    #             context.update(request.state.custom_context)
+                context = {'request': request, 'schema': _schema, 'is_ajax': ajax}
+                context.update(request.state.custom_context)
 
-    #             return templates.TemplateResponse(self.form['template'], context)
-    #         else:
-    #             raise NOT_FOUND from None
+                return templates.TemplateResponse(self.crud.form['template'], context)
+            # else:
+                # raise NOT_FOUND from None
             
-    #     return route
+        return route
     
-    # def _form_lista(self, *args: Any, **kwargs: Any) -> CALLABLE:
-    #     async def route(
-    #         request: Request, 
-    #         ajax: bool = False,
-    #         default: dict = Depends(utils.parse_list)
-    #     ):
-    #         _schema = _j.generate_json_schema(self.lista['schema'])
-    #         _schema = utils.preencher_schema_model(None, _schema, self.get_schema_value, self.get_schema_data_list, self.get_schema_component)
-    #         _schema = utils.preencher_schema_default(default, _schema)
+    def _form_lista(self):
+        async def route(
+            request: Request, 
+            ajax: bool = False,
+            default: dict = Depends(utils.parse_list)
+        ):
+            _schema = _j.generate_json_schema(self.crud.lista['schema'])
+            _schema = utils.preencher_schema_model(None, _schema, self.crud.get_schema_value, self.crud.get_schema_data_list, self.crud.get_schema_component)
+            _schema = utils.preencher_schema_default(default, _schema)
             
-    #         context = {'request': request, 'schema': _schema, 'is_ajax': ajax}
-    #         context.update(request.state.custom_context)
+            context = {'request': request, 'schema': _schema, 'is_ajax': ajax}
+            context.update(request.state.custom_context)
 
-    #         return templates.TemplateResponse(self.lista['template'], context)
+            return templates.TemplateResponse(self.crud.lista['template'], context)
         
-    #     return route
+        return route
     

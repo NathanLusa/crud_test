@@ -75,7 +75,6 @@ def lookup_solver(db_models: List[Item]) -> List[BaseLookupSchema]:
 def lookup_filter(find):
     return {'name__ilike':f'%{find}%'}
 
-
 # CRUD operations setup
 item_crud = ApiCRUD(
     Item,
