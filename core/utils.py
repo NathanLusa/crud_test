@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import Query
 from core.components.attribute import DataAttr
 
-def preencher_schema_model(model, schema_json, get_schema_value, get_schema_data_list, get_schema_component):
+def preencher_schema_model_object(model, schema_json, get_schema_value, get_schema_data_list, get_schema_component):
     def fill_component(component, model):
         if 'name' in component:
             if model and hasattr(model, component['name']):
@@ -12,6 +12,56 @@ def preencher_schema_model(model, schema_json, get_schema_value, get_schema_data
                     relation = getattr(model, f'{component["name"]}_rel')
                     component['data_list'].append(DataAttr(name='selected-id', value=str(getattr(model, component['name']))))
                     if hasattr(relation, 'name'):
+                        component['value'] += (' - ' + relation.name)
+
+            if get_schema_value and ('value' in component):
+                component['value'] = get_schema_value(component['name'], component['value'], model['id'] if model else 0)
+
+            if get_schema_data_list and ('data_list' in component):
+                component['data_list'] = get_schema_data_list(component['name'], component['data_list'], model['id'] if model else 0)
+
+        if get_schema_component:
+            component = get_schema_component(component, model['id'] if model else 0)
+
+        if 'components' in component:
+            for sub_component in component['components']:
+                fill_component(sub_component, model)
+
+        if 'title' in component and isinstance(component['title'], list):
+            for sub_component in component['title']:
+                fill_component(sub_component, model)
+
+
+    # Procurar pela chave 'components' no schema
+    def traverse_and_fill(schema, model):
+        if isinstance(schema, dict):
+            for key, value in schema.items():
+                if key == 'components' and isinstance(value, list):
+                    for component in value:
+                        fill_component(component, model)
+                else:
+                    traverse_and_fill(value, model)
+
+            if get_schema_component:
+                schema = get_schema_component(schema, model['id'] if model else 0)
+        elif isinstance(schema, list):
+            for item in schema:
+                traverse_and_fill(item, model)
+
+    traverse_and_fill(schema_json, model)
+
+    return schema_json
+
+
+def preencher_schema_model(model, schema_json, get_schema_value, get_schema_data_list, get_schema_component):
+    def fill_component(component, model):
+        if 'name' in component:
+            if model and component['name'] in model:
+                component['value'] = str(model[component['name']])
+                if f'{component["name"]}_rel' in model:
+                    relation = model[f'{component["name"]}_rel']
+                    component['data_list'].append(DataAttr(name='selected-id', value=str(model[component['name']])))
+                    if 'name' in relation:
                         component['value'] += (' - ' + relation.name)
 
             if get_schema_value and ('value' in component):
