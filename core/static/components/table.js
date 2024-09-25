@@ -142,7 +142,7 @@ function loadTableData(table) {
         method: "GET",
         success: function (data) {
             console.log(data);
-            handleTableData(table, data);
+            handleTableData(table, data["data"]);
         },
         error: function (err) {
             console.error("Erro ao carregar dados da tabela:", err);
