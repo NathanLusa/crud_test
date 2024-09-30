@@ -1,17 +1,21 @@
+from datetime import datetime
 from sqlalchemy import Column, DateTime, Integer, Numeric, String, func
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped, registry, mapped_column
 
 
-class Base(DeclarativeBase):
-    pass
+# class Base(DeclarativeBase):
+#     pass
 
+table_registry = registry()
 
-class Item(Base):
+@table_registry.mapped_as_dataclass
+class Item():
     __tablename__ = "items"
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    description = Column(String)
-    category = Column(String)
-    price = Column(Numeric)
-    last_sold = Column(DateTime)
-    created_at = Column(DateTime, default=func.now())
+    
+    id: Mapped[int]  = mapped_column(init=False, primary_key=True)
+    name: Mapped[str]
+    description: Mapped[str]
+    category: Mapped[str]
+    price: Mapped[float]
+    last_sold: Mapped[datetime]
+    created_at: Mapped[datetime] = mapped_column(init=False, server_default=func.now())

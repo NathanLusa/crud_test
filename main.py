@@ -6,9 +6,9 @@ from fastapi.staticfiles import StaticFiles
 from fastcrud import crud_router, EndpointCreator, FastCRUD
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, registry
 
-from crud_test.item.model import Base, Item
+from crud_test.item.model import Item
 from crud_test.item.schemas import ItemSchema
 
 from core import api_router, form_router, ApiCRUD, FormCRUD
@@ -33,7 +33,7 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
 # Create tables before the app start
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(registry().metadata.create_all)
     yield
 
 # FastAPI app
