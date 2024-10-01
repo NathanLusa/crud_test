@@ -3,40 +3,34 @@ from typing import AsyncGenerator, List, Any
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 
-from fastcrud import crud_router, EndpointCreator, FastCRUD
-
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, registry
 
-from crud_test.item.model import Item
-from crud_test.item.schemas import ItemSchema
-
 from core import api_router, form_router, ApiCRUD, FormCRUD
 from core import components as c
+from core.database import table_registry
 from core.schemas import BaseLookupSchema
 from core.templates import templates, MenuItem
 from core.types import BaseUI, TemplateSchemaDict
 
 from app.enums import ContaStatusEnum, ContaTipoEnum
+from app.models import Item
+from app.schemas import ItemSchema
+from app.settings import Settings
 
 
-# Database setup (Async SQLAlchemy)
-DATABASE_URL = "sqlite+aiosqlite:///./test.db"
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(Settings().DATABASE_URL, echo=True)
 async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-# Database session dependency
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session() as session:
         yield session
 
-# Create tables before the app start
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
-        await conn.run_sync(registry().metadata.create_all)
+        await conn.run_sync(table_registry.metadata.create_all)
     yield
 
-# FastAPI app
 app = FastAPI(lifespan=lifespan)
 app.mount('/static', StaticFiles(directory='core/static'), name='static')
 

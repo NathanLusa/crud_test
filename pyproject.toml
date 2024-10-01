@@ -11,6 +11,8 @@ fastcrud = "^0.14.0"
 aiosqlite = "^0.20.0"
 sqlalchemy = "^2.0.32"
 greenlet = "^3.0.3"
+alembic = "^1.13.3"
+pydantic-settings = "^2.5.2"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -23,3 +25,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.taskipy.tasks]
 run = "fastapi dev main.py"
 commit = "git add . && git commit -m '.' && git push"
+clear = "rm -rf migrations && rm test.db && alembic init migrations"

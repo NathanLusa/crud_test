@@ -1,12 +1,12 @@
 from datetime import datetime
 from sqlalchemy import Column, DateTime, Integer, Numeric, String, func
-from sqlalchemy.orm import Mapped, registry, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
+
+from core.database import table_registry
 
 
 # class Base(DeclarativeBase):
 #     pass
-
-table_registry = registry()
 
 @table_registry.mapped_as_dataclass
 class Item():
