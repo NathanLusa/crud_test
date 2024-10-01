@@ -26,12 +26,7 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session() as session:
         yield session
 
-async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(table_registry.metadata.create_all)
-    yield
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 app.mount('/static', StaticFiles(directory='core/static'), name='static')
 
 menus = [
